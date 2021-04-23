@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="stu.wbw.music.mapper.SongListMapper">
+
+    <resultMap id="BaseResultMap" type="stu.wbw.music.pojo.SongList">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="pic" jdbcType="VARCHAR" property="pic"/>
+        <result column="style" jdbcType="VARCHAR" property="style"/>
+    </resultMap>
+
+    <resultMap id="ResultMapWithBlog" type="SongList" extends="BaseResultMap">
+        <result column="introduction" jdbcType="LONGVARCHAR" property="introduction"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,title,pic,style
+    </sql>
+
+    <sql id="Blog_Column_List">
+        id,title,pic,style,introduction
+    </sql>
+
+    <insert id="insert" parameterType="SongList">
+        insert into song_list
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="pic != null">
+                pic,
+            </if>
+            <if test="style != null">
+                style,
+            </if>
+            <if test="introduction != null">
+                introduction,
+            </if>
+        </trim>
+        <trim prefix=" values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="title != null">
+                #{title},
+            </if>
+            <if test="pic != null">
+                #{pic},
+            </if>
+            <if test="style != null">
+                #{style},
+            </if>
+            <if test="introduction != null">
+                #{introduction},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="SongList">
+        update song_list
+        <set>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="pic != null">
+                pic = #{pic},
+            </if>
+            <if test="style != null">
+                style = #{style},
+            </if>
+            <if test="introduction != null">
+                introduction = #{introduction},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Integer">
+        delete from song_list where id=#{id}
+    </delete>
+
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBlog" parameterType="Integer">
+        select
+        <include refid="Blog_Column_List"/>
+        from song_list where id=#{id}
+    </select>
+
+    <select id="allSongList" resultMap="ResultMapWithBlog">
+        select
+        <include refid="Blog_Column_List"/>
+        from song_list
+    </select>
+
+    <select id="songListOfTitle" resultMap="ResultMapWithBlog" parameterType="String">
+        select
+        <include refid="Blog_Column_List"/>
+        from song_list
+        where title = #{title}
+    </select>
+
+    <select id="likeTitle" resultMap="ResultMapWithBlog" parameterType="String">
+        select
+        <include refid="Blog_Column_List"/>
+        from song_list
+        where title like #{title}
+    </select>
+
+    <select id="likeStyle" resultMap="ResultMapWithBlog" parameterType="String">
+        select
+        <include refid="Blog_Column_List"/>
+        from song_list
+        where style like #{style}
+    </select>
+
+</mapper>
